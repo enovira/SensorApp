@@ -3,7 +3,6 @@ package com.yxh.sensor.mvvm.view
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
-import android.os.Handler.Callback
 import android.os.Looper
 import android.view.KeyEvent
 import android.view.View

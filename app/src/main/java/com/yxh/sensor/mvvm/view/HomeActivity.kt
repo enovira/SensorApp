@@ -52,59 +52,35 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
 
     override fun initView() {
         mBinding.vm = mViewModel
-        mViewModel.viewModelScope.launch {
-            initListener()
-            initObserver()
-            initImei()
-            initSharedPreferenceValue()
-            startGifAnimation()
+        checkPermissions()
+        initListener()
+        initObserver()
+        initImei()
+        initSharedPreferenceValue()
+        startGifAnimation()
 //            initGPSStatus()
-        }
 //        println(getUniqueId())
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         mBinding.root.x = 0f
-        initReceiver()
-        updateTime()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            permissionRequester.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.BODY_SENSORS,
-                    Manifest.permission.ACTIVITY_RECOGNITION,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                )
-            )
-        } else {
-            permissionRequester.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.BODY_SENSORS,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                )
-            )
+        mViewModel.viewModelScope.launch {
+            updateTime()
+            registerBroadcastReceiver()
         }
     }
 
-    override fun onStop() {
-        removeReceiver()
+    override fun onPause() {
+        super.onPause()
+        unregisterBroadcastReceiver()
         unregisterHeartRateListener()
-        super.onStop()
     }
 
     private fun registerHeartRateListener() {
         mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)?.let {
             mSensorManager.registerListener(
-                heartRateSensorListener,
-                it,
-                SensorManager.SENSOR_DELAY_NORMAL
-            )
+                heartRateSensorListener, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
     }
 
@@ -152,6 +128,32 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
 
     }
 
+
+    private fun checkPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            permissionRequester.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.BODY_SENSORS,
+                    Manifest.permission.ACTIVITY_RECOGNITION,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                )
+            )
+        } else {
+            permissionRequester.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.BODY_SENSORS,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                )
+            )
+        }
+    }
+
     private fun updateTime() {
         calendar.timeInMillis = System.currentTimeMillis()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
@@ -189,7 +191,7 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
         }
     }
 
-    private fun initReceiver() {
+    private fun registerBroadcastReceiver() {
         //注册电池电量广播接收器
         val intentFilter = IntentFilter()
         intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED)
@@ -200,7 +202,7 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
         registerReceiver(timeBroadcastReceiver, timeIntentFilter)
     }
 
-    private fun removeReceiver() {
+    private fun unregisterBroadcastReceiver() {
         unregisterReceiver(batteryBroadcastReceiver)
         unregisterReceiver(timeBroadcastReceiver)
     }

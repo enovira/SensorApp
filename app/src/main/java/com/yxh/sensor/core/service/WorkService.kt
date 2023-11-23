@@ -39,8 +39,6 @@ import com.yxh.sensor.core.utils.SPUtils
 import com.yxh.sensor.mvvm.view.NewWorkActivity
 import java.util.Calendar
 import java.util.Locale
-import java.util.Timer
-import java.util.TimerTask
 
 class WorkService : Service(), SensorEventListener, LocationListener {
 
