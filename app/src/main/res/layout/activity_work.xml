@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.yxh.sensor.mvvm.viewmodel.WorkActivityViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_round_gradient_gray_to_black_1000dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:context=".mvvm.view.WorkActivity">
+
+        <ImageView
+            android:id="@+id/ivHeartRateLevel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@mipmap/ic_heart_rate_level_0"
+            android:contentDescription="心率表盘" />
+
+
+        <TextView
+            android:id="@+id/centerPoint"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:text="|"
+            android:layout_marginBottom="30dp"
+            android:textSize="36sp"
+            android:textColor="#999"
+            style="@style/WorkActivityTextAppearance"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 心率 -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/centerPoint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tvHeartRate"
+                style="@style/WorkActivityTextAppearance"
+                android:text="@{String.valueOf(vm.heartRate)}"
+                android:textSize="36sp" />
+
+            <TextView
+                style="@style/WorkActivityTextAppearance"
+                android:text="@string/heart_rate_uit"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvHeartRate" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/centerPoint"
+            app:layout_constraintTop_toTopOf="@id/centerPoint"
+            app:layout_constraintEnd_toStartOf="@id/centerPoint"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/tvBloodOxygen"
+                style="@style/WorkActivityTextAppearance"
+                android:text="@{String.valueOf(vm.bloodOxygen)}" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/WorkActivityTextAppearance"
+                android:drawableStart="@mipmap/ic_blood_oxygen"
+                android:drawablePadding="6dp"
+                android:text="@string/blood_oxygen"
+                android:textSize="20sp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- 步数 -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/centerPoint"
+            app:layout_constraintTop_toTopOf="@id/centerPoint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/centerPoint">
+
+            <TextView
+                android:id="@+id/tvStep"
+                style="@style/WorkActivityTextAppearance"
+                android:text="@{String.valueOf(vm.stepCount)}" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/WorkActivityTextAppearance"
+                android:drawableStart="@mipmap/ic_step_count"
+                android:drawablePadding="6dp"
+                android:text="@string/step_count"
+                android:textSize="20sp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- 时间 -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/centerPoint">
+
+            <TextView
+                android:id="@+id/tvWorkTime"
+                style="@style/WorkActivityTextAppearance"
+                android:text="00:00:00"
+                android:textSize="36sp" />
+
+            <TextView
+                style="@style/WorkActivityTextAppearance"
+                android:text="@string/work_time"
+                android:textSize="20sp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <TextView
+            android:id="@+id/tvTime"
+            style="@style/WorkActivityTextAppearance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00 AM"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llTime" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/llMarks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_round_gradient_gray_to_black_1000dp"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="@drawable/shape_elliptic_translucent_white_30"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvFinish"
+                style="@style/ConfigActivityTextAppearance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@mipmap/ic_close"
+                android:drawablePadding="20dp"
+                android:gravity="center"
+                android:text="@string/finish_the_work"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

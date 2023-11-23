@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.yxh.sensor.mvvm.viewmodel.HomeActivityViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_round_gradient_gray_to_black_1000dp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/verticalCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <ImageButton
+            android:id="@+id/btnStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/ic_start_work"
+            android:contentDescription="@string/start_work"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 电池和时间信息 -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTime"
+            style="@style/HomeActivityTextAppearance"
+            android:layout_marginTop="20dp"
+            android:text="@string/time"
+            android:textSize="28sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.yxh.sensor.mvvm.view.BatteryView
+            android:id="@+id/horizontalBattery"
+            android:layout_width="36dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="2dp"
+            android:background="#00FFFFFF"
+            android:gravity="center"
+            app:batteryOrientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@id/verticalCenter"
+            app:layout_constraintTop_toBottomOf="@id/tvTime" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvBattery"
+            style="@style/HomeActivityTextAppearance"
+            android:layout_marginStart="2dp"
+            android:text="50%"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@id/horizontalBattery"
+            app:layout_constraintStart_toEndOf="@id/verticalCenter"
+            app:layout_constraintTop_toTopOf="@id/horizontalBattery" />
+
+        <!-- GPS信号 -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvGps"
+            style="@style/HomeActivityTextAppearance"
+            android:drawableTop="@mipmap/ic_gps_3"
+            android:gravity="center"
+            android:text="@string/gps"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnStart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 心率 -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnStart"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivHeartRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/gif_heart_rate" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvHeartRate"
+                style="@style/HomeActivityTextAppearance"
+                android:gravity="center"
+                android:text="0" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <TextView
+            android:id="@+id/tvImeiStr"
+            style="@style/HomeActivityTextAppearance"
+            android:text="IMEI"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnStart" />
+
+        <TextView
+            android:id="@+id/tvIMEI"
+            style="@style/HomeActivityTextAppearance"
+            android:text="IMEIValue"
+            android:textSize="28sp"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintBottom_toTopOf="@id/tvImeiStr"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

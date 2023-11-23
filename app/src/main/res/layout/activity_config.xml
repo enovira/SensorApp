@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.yxh.sensor.mvvm.viewmodel.ConfigActivityViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_round_gradient_gray_to_black_1000dp"
+        android:clipChildren="true">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guildLineLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.05" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guildLineRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/ic_setting"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guildLineRight"
+            app:layout_constraintStart_toStartOf="@id/guildLineLeft"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llFrequency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_config_item_background"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tvFrequency"
+                    style="@style/ConfigActivityTextAppearance"
+                    android:text="上送频率(秒)" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etFrequency"
+                    style="@style/ConfigActivityEdittextAppearance"
+                    android:layout_width="match_parent"
+                    android:drawableEnd="@mipmap/ic_arrow"
+                    android:drawablePadding="10dp"
+                    android:hint="上送频率"
+                    android:maxLength="6" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llIp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_config_item_background"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llFrequency">
+
+                <TextView
+                    android:id="@+id/tvIp"
+                    style="@style/ConfigActivityTextAppearance"
+                    android:text="平台地址"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvFrequency" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etIp"
+                    style="@style/ConfigActivityEdittextAppearance"
+                    android:layout_width="match_parent"
+                    android:drawableEnd="@mipmap/ic_arrow"
+                    android:drawablePadding="10dp"
+                    android:hint="IP地址"
+                    android:maxLength="20" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llPort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_config_item_background"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llIp">
+
+                <TextView
+                    android:id="@+id/tvPort"
+                    style="@style/ConfigActivityTextAppearance"
+                    android:text="平台端口" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etPort"
+                    style="@style/ConfigActivityEdittextAppearance"
+                    android:layout_width="match_parent"
+                    android:drawableEnd="@mipmap/ic_arrow"
+                    android:drawablePadding="10dp"
+                    android:hint="端口号"
+                    android:maxLength="5" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
