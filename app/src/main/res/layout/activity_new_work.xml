@@ -46,6 +46,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
+            android:layout_marginBottom="40dp"
             app:layout_constraintBottom_toBottomOf="@id/centerPoint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,12 +56,13 @@
                 android:id="@+id/tvHeartRate"
                 style="@style/WorkActivityTextAppearance"
                 android:text="@{String.valueOf(vm.heartRate)}"
-                android:textSize="36sp" />
+                android:textSize="55sp" />
 
             <TextView
                 style="@style/WorkActivityTextAppearance"
                 android:text="@string/heart_rate_uit"
-                android:textSize="20sp"
+                android:textColor="#d9d9d9"
+                android:layout_marginTop="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvHeartRate" />
@@ -72,6 +74,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
+            android:textSize="48sp"
             app:layout_constraintBottom_toBottomOf="@id/centerPoint"
             app:layout_constraintTop_toTopOf="@id/centerPoint"
             app:layout_constraintEnd_toStartOf="@id/centerPoint"
@@ -86,8 +89,9 @@
                 style="@style/WorkActivityTextAppearance"
                 android:drawableStart="@mipmap/ic_blood_oxygen"
                 android:drawablePadding="6dp"
+                android:textColor="#d9d9d9"
                 android:text="@string/blood_oxygen"
-                android:textSize="20sp" />
+                android:layout_marginTop="12dp"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -97,6 +101,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
+            android:textSize="48sp"
             app:layout_constraintBottom_toBottomOf="@id/centerPoint"
             app:layout_constraintTop_toTopOf="@id/centerPoint"
             app:layout_constraintEnd_toEndOf="parent"
@@ -111,8 +116,9 @@
                 style="@style/WorkActivityTextAppearance"
                 android:drawableStart="@mipmap/ic_step_count"
                 android:drawablePadding="6dp"
-                android:text="@string/step_count"
-                android:textSize="20sp" />
+                android:textColor="#d9d9d9"
+                android:layout_marginTop="12dp"
+                android:text="@string/step_count" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -132,12 +138,14 @@
                 android:id="@+id/tvWorkTime"
                 style="@style/WorkActivityTextAppearance"
                 android:text="00:00:00"
-                android:textSize="36sp" />
+                android:textSize="55sp" />
 
             <TextView
                 style="@style/WorkActivityTextAppearance"
+                android:layout_marginTop="12dp"
+                android:textColor="#d9d9d9"
                 android:text="@string/work_time"
-                android:textSize="20sp" />
+                android:textSize="27sp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -146,6 +154,7 @@
             style="@style/WorkActivityTextAppearance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="30sp"
             android:text="00:00 AM"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

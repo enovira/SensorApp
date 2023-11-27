@@ -42,9 +42,9 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTime"
             style="@style/HomeActivityTextAppearance"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:text="@string/time"
-            android:textSize="28sp"
+            android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -52,9 +52,9 @@
         <com.yxh.sensor.mvvm.view.BatteryView
             android:id="@+id/horizontalBattery"
             android:layout_width="36dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="2dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
             android:background="#00FFFFFF"
             android:gravity="center"
             app:batteryOrientation="horizontal"
@@ -64,9 +64,9 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvBattery"
             style="@style/HomeActivityTextAppearance"
-            android:layout_marginStart="2dp"
+            android:layout_marginStart="8dp"
             android:text="50%"
-            android:textSize="24sp"
+            android:textSize="28sp"
             app:layout_constraintBottom_toBottomOf="@id/horizontalBattery"
             app:layout_constraintStart_toEndOf="@id/verticalCenter"
             app:layout_constraintTop_toTopOf="@id/horizontalBattery" />
@@ -77,6 +77,7 @@
             style="@style/HomeActivityTextAppearance"
             android:drawableTop="@mipmap/ic_gps_3"
             android:gravity="center"
+            android:drawablePadding="12dp"
             android:text="@string/gps"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnStart"
@@ -102,6 +103,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvHeartRate"
+                android:layout_marginTop="12dp"
                 style="@style/HomeActivityTextAppearance"
                 android:gravity="center"
                 android:text="0" />
