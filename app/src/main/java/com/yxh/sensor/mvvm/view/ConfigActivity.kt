@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import com.yxh.sensor.R
 import com.yxh.sensor.core.base.BaseSwipeLeftActivity
+import com.yxh.sensor.core.global.ConstantStore
 import com.yxh.sensor.core.global.SPKey
 import com.yxh.sensor.core.utils.SPUtils
 import com.yxh.sensor.databinding.ActivityConfigBinding
@@ -166,9 +167,9 @@ class ConfigActivity : BaseSwipeLeftActivity<ConfigActivityViewModel, ActivityCo
 
     private fun initSharedPreferenceValue() {
         SPUtils.instance.run {
-            mBinding.etFrequency.setText(getInt(SPKey.key_upload_frequency, 60).toString())
-            mBinding.etIp.setText(getString(SPKey.key_ip_address))
-            mBinding.etPort.setText(getInt(SPKey.key_port, 18891).toString())
+            mBinding.etFrequency.setText(getInt(SPKey.key_upload_frequency, ConstantStore.defaultFrequency).toString())
+            mBinding.etIp.setText(getString(SPKey.key_ip_address, ConstantStore.defaultIp))
+            mBinding.etPort.setText(getInt(SPKey.key_port, ConstantStore.defaultPort).toString())
         }
     }
 

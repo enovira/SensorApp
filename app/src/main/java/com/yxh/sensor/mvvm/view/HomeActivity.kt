@@ -25,6 +25,7 @@ import com.yxh.sensor.App
 import com.yxh.sensor.R
 import com.yxh.sensor.core.base.BaseSwipeLeftActivity
 import com.yxh.sensor.core.base.PreventFastClickListener
+import com.yxh.sensor.core.global.ConstantStore
 import com.yxh.sensor.core.global.SPKey
 import com.yxh.sensor.core.receiver.BatteryBroadcastReceiver
 import com.yxh.sensor.core.receiver.TimeBroadcastReceiver
@@ -311,13 +312,13 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
         mViewModel.viewModelScope.launch {
             SPUtils.instance.run {
                 if (getString(SPKey.key_ip_address) == null) {
-                    putString(SPKey.key_ip_address, "192.168.1.137")
+                    putString(SPKey.key_ip_address, ConstantStore.defaultIp)
                 }
                 if (getInt(SPKey.key_port) == null) {
-                    putInt(SPKey.key_port, 18891)
+                    putInt(SPKey.key_port, ConstantStore.defaultPort)
                 }
                 if (getInt(SPKey.key_upload_frequency) == null) {
-                    putInt(SPKey.key_upload_frequency, 60)
+                    putInt(SPKey.key_upload_frequency, ConstantStore.defaultFrequency)
                 }
             }
         }

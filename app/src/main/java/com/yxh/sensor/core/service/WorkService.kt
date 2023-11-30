@@ -232,8 +232,7 @@ class WorkService : Service(), SensorEventListener, LocationListener {
     private fun reportProperty() {
         kotlin.runCatching {
             SensorEventViewModel.reportProperties(
-                CustomPosition(latitude, longitude)
-            )
+                CustomPosition(latitude, longitude))
         }.exceptionOrNull()?.run {
             LogUtils.e(message)
             App.instance.eventViewModelStore.sensorEventViewModel.apiServerException.postValue(

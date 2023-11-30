@@ -73,7 +73,7 @@ class NewWorkActivity : BaseSwipeLeftActivity<SensorEventViewModel, ActivityNewW
                 3
             } else if (it in 140..149) {
                 4
-            } else if (it > 150) {
+            } else if (it >= 150) {
                 5
             } else {
                 0
