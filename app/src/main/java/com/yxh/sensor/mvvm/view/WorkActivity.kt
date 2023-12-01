@@ -26,6 +26,7 @@ import com.google.gson.Gson
 import com.yxh.sensor.App
 import com.yxh.sensor.R
 import com.yxh.sensor.core.base.BaseSensorActivity
+import com.yxh.sensor.core.global.ConstantStore
 import com.yxh.sensor.core.global.SPKey
 import com.yxh.sensor.core.receiver.TimeBroadcastReceiver
 import com.yxh.sensor.core.retrofit.bean.CustomPosition
@@ -63,7 +64,7 @@ class WorkActivity : BaseSensorActivity<WorkActivityViewModel, ActivityWorkBindi
     private var minute = 0
     private var second = 0
     private var count = 0
-    private val period = SPUtils.instance.getInt(SPKey.key_upload_frequency, 60)
+    private val period = SPUtils.instance.getInt(SPKey.key_upload_frequency, ConstantStore.defaultFrequency)
     private var latitude: Double? = null
     private var longitude: Double? = null
 

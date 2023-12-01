@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.yxh.sensor.core.global.SensorEventViewModel" />
+            type="com.yxh.sensor.mvvm.viewmodel.NewWorkActivityViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

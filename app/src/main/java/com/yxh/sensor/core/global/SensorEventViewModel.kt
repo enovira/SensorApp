@@ -17,7 +17,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.security.InvalidParameterException
 
-object SensorEventViewModel: ViewModel() {
+class SensorEventViewModel: ViewModel() {
 
     private var apiServer: ApiServer? = null
 

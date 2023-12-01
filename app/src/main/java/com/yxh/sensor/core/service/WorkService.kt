@@ -7,6 +7,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -27,18 +28,23 @@ import android.os.PowerManager.WakeLock
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.view.KeyEventDispatcher.Component
 import com.blankj.utilcode.util.LogUtils
 import com.google.gson.Gson
 import com.yxh.sensor.App
 import com.yxh.sensor.R
+import com.yxh.sensor.core.global.ConstantStore
 import com.yxh.sensor.core.global.SPKey
 import com.yxh.sensor.core.global.SensorEventViewModel
 import com.yxh.sensor.core.receiver.AlarmTaskReceiver
 import com.yxh.sensor.core.retrofit.bean.CustomPosition
 import com.yxh.sensor.core.utils.SPUtils
 import com.yxh.sensor.mvvm.view.NewWorkActivity
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import java.util.Timer
+import java.util.TimerTask
 
 class WorkService : Service(), SensorEventListener, LocationListener {
 
@@ -58,6 +64,9 @@ class WorkService : Service(), SensorEventListener, LocationListener {
     private var mWakeLock: WakeLock? = null
 
     private val wakeupBroadcastReceiver = WakeupBroadcastReceiver()
+    private val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.CHINA)
+
+    private var timer: Timer? = null
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -70,10 +79,11 @@ class WorkService : Service(), SensorEventListener, LocationListener {
         val intentFilter = IntentFilter()
         intentFilter.addAction("sensorWakeupBroadcast")
         registerReceiver(wakeupBroadcastReceiver, intentFilter)
+        startTimer()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        period = SPUtils.instance.getInt(SPKey.key_upload_frequency, 60)
+        period = SPUtils.instance.getInt(SPKey.key_upload_frequency, ConstantStore.defaultFrequency)
         setAlarm()
         createNotification()
         return super.onStartCommand(intent, flags, startId)
@@ -84,6 +94,8 @@ class WorkService : Service(), SensorEventListener, LocationListener {
         sensorManager.unregisterListener(this)
         notificationManager.cancel(notificationId)
         unregisterReceiver(wakeupBroadcastReceiver)
+        timer?.cancel()
+        timer = null
         super.onDestroy()
     }
 
@@ -128,6 +140,17 @@ class WorkService : Service(), SensorEventListener, LocationListener {
         println("经度: $latitude, 纬度: $longitude")
     }
 
+    private fun startTimer() {
+        timer?.cancel()
+        timer = Timer().apply {
+            schedule(object : java.util.TimerTask() {
+                override fun run() {
+                    LogUtils.d("time: ${simpleDateFormat.format(System.currentTimeMillis())}")
+                }
+            }, 0, 1000)
+        }
+    }
+
     /**
      * 创建通知
      */
@@ -159,8 +182,8 @@ class WorkService : Service(), SensorEventListener, LocationListener {
                 // 设置点击前台通知后进行的动作,此处示例为启动服务
                 setContentIntent(pendingIntent)
             }.build()
-//        startForeground(notificationId, notification)
         notificationManager.notify(notificationId, notification)
+        startForeground(notificationId, notification)
     }
 
     /**
@@ -231,7 +254,7 @@ class WorkService : Service(), SensorEventListener, LocationListener {
      */
     private fun reportProperty() {
         kotlin.runCatching {
-            SensorEventViewModel.reportProperties(
+            App.instance.eventViewModelStore.sensorEventViewModel.reportProperties(
                 CustomPosition(latitude, longitude))
         }.exceptionOrNull()?.run {
             LogUtils.e(message)
@@ -257,12 +280,13 @@ class WorkService : Service(), SensorEventListener, LocationListener {
     }
 
     private fun setAlarm() {
-        LogUtils.d("setAlarm")
+        LogUtils.d("setAlarm ${simpleDateFormat.format(System.currentTimeMillis())}")
         val calendar = Calendar.getInstance(Locale.CHINA)
         calendar.timeInMillis = System.currentTimeMillis()
-        calendar.add(Calendar.SECOND, period)
+        calendar.add(Calendar.SECOND, period) //设置唤醒间隔
         val intent = Intent(this, AlarmTaskReceiver::class.java)
         intent.action = "alarmBroadcast"
+//        intent.component = ComponentName(packageName, WorkService::class.java.name)
         val pendingIntent =
             PendingIntent.getBroadcast(this, 100, intent, PendingIntent.FLAG_IMMUTABLE)
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)

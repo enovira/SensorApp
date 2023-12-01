@@ -11,10 +11,10 @@ import androidx.activity.OnBackPressedCallback
 import com.yxh.sensor.App
 import com.yxh.sensor.R
 import com.yxh.sensor.core.base.BaseSwipeLeftActivity
-import com.yxh.sensor.core.global.SensorEventViewModel
 import com.yxh.sensor.core.receiver.TimeBroadcastReceiver
 import com.yxh.sensor.core.service.WorkService
 import com.yxh.sensor.databinding.ActivityNewWorkBinding
+import com.yxh.sensor.mvvm.viewmodel.NewWorkActivityViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -22,7 +22,7 @@ import java.util.Timer
 import java.util.TimerTask
 
 
-class NewWorkActivity : BaseSwipeLeftActivity<SensorEventViewModel, ActivityNewWorkBinding>() {
+class NewWorkActivity : BaseSwipeLeftActivity<NewWorkActivityViewModel, ActivityNewWorkBinding>() {
 
     private val calendar by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { Calendar.getInstance() }
     private val timeBroadcastReceiver by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { TimeBroadcastReceiver() }
@@ -65,6 +65,7 @@ class NewWorkActivity : BaseSwipeLeftActivity<SensorEventViewModel, ActivityNewW
             updateTime()
         }
         App.instance.eventViewModelStore.sensorEventViewModel.heartRate.observe(this) {
+            mViewModel.heartRate.postValue(it)
             judgeHeartRateLevelChanged(if (it in 110..119) {
                 1
             } else if (it in 120..129) {
@@ -79,7 +80,13 @@ class NewWorkActivity : BaseSwipeLeftActivity<SensorEventViewModel, ActivityNewW
                 0
             })
         }
-        mViewModel.apiServerException.observe(this) {
+        App.instance.eventViewModelStore.sensorEventViewModel.bloodOxygen.observe(this) {
+            mViewModel.bloodOxygen.postValue(it)
+        }
+        App.instance.eventViewModelStore.sensorEventViewModel.stepCount.observe(this) {
+            mViewModel.stepCount.postValue(it)
+        }
+        App.instance.eventViewModelStore.sensorEventViewModel.apiServerException.observe(this) {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
     }
