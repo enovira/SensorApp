@@ -39,64 +39,40 @@ class ConfigActivity : BaseSwipeLeftActivity<ConfigActivityViewModel, ActivityCo
             }
         })
 
+        mBinding.etFrequency.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                mBinding.llFrequency.isSelected = true
+                mBinding.llIp.isSelected = false
+                mBinding.llPort.isSelected = false
+                toggleInputMethod(v, true)
+            }
+        }
         mBinding.llFrequency.setOnClickListener {
-            if (!it.isSelected) {
-                switchEdittextEnabled(mBinding.etFrequency, true)
-                switchEdittextEnabled(mBinding.etIp, false)
-                switchEdittextEnabled(mBinding.etPort, false)
-
-                it.isSelected = true
-                mBinding.llIp.isSelected = false
-                mBinding.llPort.isSelected = false
-                toggleInputMethod(it, false)
-            } else {
-                mBinding.etFrequency.run {
-                    if (isFocusable && isEnabled) {
-                        requestFocus()
-                        toggleInputMethod(this, true)
-                    }
-                }
-            }
+            mBinding.etFrequency.requestFocus()
         }
 
+        mBinding.etIp.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                mBinding.llFrequency.isSelected = false
+                mBinding.llIp.isSelected = true
+                mBinding.llPort.isSelected = false
+                toggleInputMethod(v, true)
+            }
+        }
         mBinding.llIp.setOnClickListener {
-            if (!it.isSelected) {
-                switchEdittextEnabled(mBinding.etFrequency, false)
-                switchEdittextEnabled(mBinding.etIp, true)
-                switchEdittextEnabled(mBinding.etPort, false)
-
-                it.isSelected = true
-                mBinding.llFrequency.isSelected = false
-                mBinding.llPort.isSelected = false
-                toggleInputMethod(it, false)
-            } else {
-                mBinding.etIp.run {
-                    if (isFocusable && isEnabled) {
-                        requestFocus()
-                        toggleInputMethod(this, true)
-                    }
-                }
-            }
+            mBinding.etIp.requestFocus()
         }
 
-        mBinding.llPort.setOnClickListener {
-            if (!it.isSelected) {
-                switchEdittextEnabled(mBinding.etFrequency, false)
-                switchEdittextEnabled(mBinding.etIp, false)
-                switchEdittextEnabled(mBinding.etPort, true)
-
-                it.isSelected = true
+        mBinding.etPort.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
                 mBinding.llFrequency.isSelected = false
                 mBinding.llIp.isSelected = false
-                toggleInputMethod(it, false)
-            } else {
-                mBinding.etPort.run {
-                    if (isFocusable && isEnabled) {
-                        requestFocus()
-                        toggleInputMethod(this, true)
-                    }
-                }
+                mBinding.llPort.isSelected = true
+                toggleInputMethod(v, true)
             }
+        }
+        mBinding.llPort.setOnClickListener {
+            mBinding.etPort.requestFocus()
         }
 
         mBinding.etIp.setOnEditorActionListener { v, actionId, event ->
@@ -187,14 +163,6 @@ class ConfigActivity : BaseSwipeLeftActivity<ConfigActivityViewModel, ActivityCo
                 v.windowToken,
                 InputMethodManager.HIDE_NOT_ALWAYS
             )
-        }
-    }
-
-    private fun switchEdittextEnabled(editText: EditText, enabled: Boolean) {
-        editText.run {
-            isEnabled = enabled
-//            isClickable = enabled
-//            isFocusable = enabled
         }
     }
 }

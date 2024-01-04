@@ -114,6 +114,9 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
             } else {
                 println("获取ACTIVITY_RECOGNITION权限失败")
             }
+            if (it[Manifest.permission.READ_PHONE_STATE] == true) {
+                initImei()
+            }
         }
 
     private val heartRateSensorListener = object : SensorEventListener {
@@ -140,6 +143,7 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
                     Manifest.permission.ACTIVITY_RECOGNITION,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_PHONE_STATE,
                 )
             )
         } else {
@@ -150,6 +154,7 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
                     Manifest.permission.BODY_SENSORS,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_PHONE_STATE,
                 )
             )
         }
