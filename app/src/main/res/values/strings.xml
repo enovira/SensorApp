@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SensorApp</string>
+    <string name="app_name">健康作业</string>
     <string name="finish_the_work">结束作业</string>
     <string name="start_work">开始工作</string>
     <string name="time">时间</string>

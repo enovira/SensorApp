@@ -14,12 +14,14 @@ import android.hardware.SensorManager
 import android.location.LocationManager
 import android.media.MediaDrm
 import android.os.Build
+import android.os.Bundle
 import android.telephony.TelephonyManager
 import android.view.View
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewModelScope
 import com.yxh.sensor.App
 import com.yxh.sensor.R
@@ -46,6 +48,11 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
     private val mSensorManager by lazy { getSystemService(SensorManager::class.java) }
     private val timeStringBuilder = StringBuilder()
     private var gpsLevel = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        val mSplashScreenView = installSplashScreen()
+        super.onCreate(savedInstanceState)
+    }
 
     override fun getLayoutId(): Int {
         return R.layout.activity_home
@@ -226,7 +233,7 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
     private fun initListener() {
         mBinding.btnStart.setOnClickListener(object : PreventFastClickListener() {
             override fun onPresentFastClick(v: View?) {
-                startActivity(Intent(this@HomeActivity, NewWorkActivity::class.java))
+                startActivity(Intent(this@HomeActivity, WorkActivity::class.java))
             }
         })
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {

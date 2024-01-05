@@ -3,6 +3,7 @@ package com.yxh.sensor.core.global
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.alibaba.fastjson.JSONObject
+import com.blankj.utilcode.util.LogUtils
 import com.google.gson.Gson
 import com.yxh.sensor.core.retrofit.ApiServer
 import com.yxh.sensor.core.retrofit.bean.CustomPosition
@@ -86,12 +87,12 @@ class SensorEventViewModel: ViewModel() {
                     customPosition
                 )
             )
-            println(Gson().toJson(reportPropertiesBean))
+            LogUtils.d(Gson().toJson(reportPropertiesBean))
             val call = apiServer?.reportProperties(reportPropertiesBean)
             call?.enqueue(object : Callback<JSONObject> {
                 override fun onResponse(call: Call<JSONObject>, response: Response<JSONObject>) {
                     println("请求成功")
-                    println(response.body()?.toJSONString())
+                    LogUtils.d(response.body()?.toJSONString())
                 }
 
                 override fun onFailure(call: Call<JSONObject>, t: Throwable) {

@@ -4,7 +4,6 @@ import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import com.yxh.sensor.R
@@ -45,6 +44,17 @@ class ConfigActivity : BaseSwipeLeftActivity<ConfigActivityViewModel, ActivityCo
                 mBinding.llIp.isSelected = false
                 mBinding.llPort.isSelected = false
                 toggleInputMethod(v, true)
+            } else {
+                judgeFrequencyValid(mBinding.etFrequency.text.toString().trim().toIntOrNull())
+                toggleInputMethod(v, false)
+            }
+        }
+        mBinding.etFrequency.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                v.clearFocus()
+                true
+            } else {
+                false
             }
         }
         mBinding.llFrequency.setOnClickListener {
@@ -57,6 +67,17 @@ class ConfigActivity : BaseSwipeLeftActivity<ConfigActivityViewModel, ActivityCo
                 mBinding.llIp.isSelected = true
                 mBinding.llPort.isSelected = false
                 toggleInputMethod(v, true)
+            } else {
+                judgeIpValid(mBinding.etIp.text.toString().trim())
+                toggleInputMethod(v, false)
+            }
+        }
+        mBinding.etIp.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                v.clearFocus()
+                true
+            } else {
+                false
             }
         }
         mBinding.llIp.setOnClickListener {
@@ -69,69 +90,21 @@ class ConfigActivity : BaseSwipeLeftActivity<ConfigActivityViewModel, ActivityCo
                 mBinding.llIp.isSelected = false
                 mBinding.llPort.isSelected = true
                 toggleInputMethod(v, true)
+            } else {
+                judgePortValid(mBinding.etPort.text.toString().trim().toIntOrNull())
+                toggleInputMethod(v, false)
+            }
+        }
+        mBinding.etPort.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                v.clearFocus()
+                true
+            } else {
+                false
             }
         }
         mBinding.llPort.setOnClickListener {
             mBinding.etPort.requestFocus()
-        }
-
-        mBinding.etIp.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                v.text.trim().toString().let {
-                    if (TextUtils.isEmpty(it)) {
-                        Toast.makeText(this@ConfigActivity, "IP地址不能为空", Toast.LENGTH_SHORT)
-                            .show()
-                    } else if (!judgeIpAvailable(it)) {
-                        Toast.makeText(this@ConfigActivity, "IP地址不符合规范", Toast.LENGTH_SHORT)
-                            .show()
-                    } else {
-                        SPUtils.instance.putString(SPKey.key_ip_address, it)
-                    }
-                }
-            }
-            false
-        }
-        mBinding.etFrequency.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                v.text.trim().toString().toIntOrNull()?.let {
-                    if (it < 60) {
-                        Toast.makeText(
-                            this@ConfigActivity,
-                            "上传频率(间隔)不能低于60秒",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        SPUtils.instance.putInt(SPKey.key_upload_frequency, it)
-                        v.text = it.toString()
-                    }
-                } ?: kotlin.run {
-                    Toast.makeText(this@ConfigActivity, "上传频率不能为空", Toast.LENGTH_SHORT).show()
-                }
-            }
-            false
-        }
-        mBinding.etPort.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                v.text.trim().toString().toIntOrNull()?.let {
-                    if (it < 0 || it > 65535) {
-                        Toast.makeText(
-                            this@ConfigActivity,
-                            "请输入平台端口号(0~65536)",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        SPUtils.instance.putInt(SPKey.key_port, it)
-                        v.text = it.toString()
-                    }
-                } ?: kotlin.run {
-                    Toast.makeText(
-                        this@ConfigActivity,
-                        "请输入平台端口号(0~65536)",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-            false
         }
     }
 
@@ -163,6 +136,46 @@ class ConfigActivity : BaseSwipeLeftActivity<ConfigActivityViewModel, ActivityCo
                 v.windowToken,
                 InputMethodManager.HIDE_NOT_ALWAYS
             )
+        }
+    }
+
+    private fun judgeFrequencyValid(frequency: Int?) {
+        if (frequency == null) {
+            Toast.makeText(this@ConfigActivity, "上传频率不能为空", Toast.LENGTH_SHORT).show()
+        } else {
+            if (frequency < ConstantStore.highestFrequency) {
+                Toast.makeText(this@ConfigActivity, "上传频率不能高于1次/${ConstantStore.highestFrequency}秒", Toast.LENGTH_SHORT).show()
+            } else {
+                SPUtils.instance.putInt(SPKey.key_upload_frequency, frequency)
+                mBinding.etFrequency.setText(frequency.toString())
+                Toast.makeText(this, "上传频率更新成功", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun judgeIpValid(ip: String) {
+        if (TextUtils.isEmpty(ip)) {
+            Toast.makeText(this@ConfigActivity, "IP地址不能为空", Toast.LENGTH_SHORT).show()
+        } else if (!judgeIpAvailable(ip)) {
+            Toast.makeText(this@ConfigActivity, "IP地址不符合规范", Toast.LENGTH_SHORT).show()
+        } else {
+            SPUtils.instance.putString(SPKey.key_ip_address, ip)
+            mBinding.etIp.setText(ip)
+            Toast.makeText(this, "IP地址更新成功", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun judgePortValid(port: Int?) {
+        port?.let {
+            if (it < 0 || it > 65535) {
+                Toast.makeText(this@ConfigActivity, "请输入平台端口号(0~65536)", Toast.LENGTH_SHORT).show()
+            } else {
+                SPUtils.instance.putInt(SPKey.key_port, it)
+                mBinding.etPort.setText(it.toString())
+                Toast.makeText(this, "平台端口号更新成功", Toast.LENGTH_SHORT).show()
+            }
+        } ?: kotlin.run {
+            Toast.makeText(this@ConfigActivity, "请输入平台端口号(0~65536)", Toast.LENGTH_SHORT).show()
         }
     }
 }

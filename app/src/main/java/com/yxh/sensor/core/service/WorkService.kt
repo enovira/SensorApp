@@ -7,7 +7,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -25,21 +24,18 @@ import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.view.KeyEventDispatcher.Component
 import com.blankj.utilcode.util.LogUtils
 import com.google.gson.Gson
 import com.yxh.sensor.App
 import com.yxh.sensor.R
 import com.yxh.sensor.core.global.ConstantStore
 import com.yxh.sensor.core.global.SPKey
-import com.yxh.sensor.core.global.SensorEventViewModel
 import com.yxh.sensor.core.receiver.AlarmTaskReceiver
 import com.yxh.sensor.core.retrofit.bean.CustomPosition
 import com.yxh.sensor.core.utils.SPUtils
-import com.yxh.sensor.mvvm.view.NewWorkActivity
+import com.yxh.sensor.mvvm.view.WorkActivity
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -79,7 +75,7 @@ class WorkService : Service(), SensorEventListener, LocationListener {
         val intentFilter = IntentFilter()
         intentFilter.addAction("sensorWakeupBroadcast")
         registerReceiver(wakeupBroadcastReceiver, intentFilter)
-        startTimer()
+//        startTimer()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -143,7 +139,7 @@ class WorkService : Service(), SensorEventListener, LocationListener {
     private fun startTimer() {
         timer?.cancel()
         timer = Timer().apply {
-            schedule(object : java.util.TimerTask() {
+            schedule(object : TimerTask() {
                 override fun run() {
                     LogUtils.d("time: ${simpleDateFormat.format(System.currentTimeMillis())}")
                 }
@@ -171,7 +167,7 @@ class WorkService : Service(), SensorEventListener, LocationListener {
             .setWhen(System.currentTimeMillis()) //设置通知时间，默认为系统发出通知的时间，通常不用设置
             .setAutoCancel(false) //打开程序后图标消失
             .apply {
-                val contentIntent = Intent(this@WorkService, NewWorkActivity::class.java)
+                val contentIntent = Intent(this@WorkService, WorkActivity::class.java)
                 // 第四个参数至关重要，参考android基础intent篇中的pendingIntent详解
                 val pendingIntent = PendingIntent.getActivity(
                     this@WorkService,
@@ -233,7 +229,7 @@ class WorkService : Service(), SensorEventListener, LocationListener {
         locationManager.getLastKnownLocation(provider)?.let {
             latitude = it.latitude
             longitude = it.longitude
-            Log.d("Location", "经度: ${it.latitude}，纬度: ${it.longitude}")
+            println("经度: ${it.latitude}，纬度: ${it.longitude}")
         }
         locationManager.requestLocationUpdates(provider, 30 * 1000, 0f, this)
     }

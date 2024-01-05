@@ -3,6 +3,7 @@ package com.yxh.sensor.core.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.blankj.utilcode.util.LogUtils
 import com.yxh.sensor.App
 
 class BatteryBroadcastReceiver: BroadcastReceiver() {
@@ -12,7 +13,7 @@ class BatteryBroadcastReceiver: BroadcastReceiver() {
                 Intent.ACTION_BATTERY_CHANGED -> {
                     it.getIntExtra("level", -1).let { level ->
                         if (level != -1) {
-                            println("接收到电池变化信息了=> level: $level")
+                            LogUtils.d("接收到电池变化信息了=> level: $level")
                             App.instance.eventViewModelStore.batteryViewModel.batteryLevelLiveData.postValue(level)
                         }
                     }

@@ -29,7 +29,6 @@ abstract class BaseSwipeLeftActivity<VM : ViewModel, VB : ViewDataBinding> :
     @SuppressLint("ClickableViewAccessibility")
     private fun registerSwipeLeftGesture() {
         mBinding.root.setOnTouchListener { v, event ->
-            println(lifecycle.currentState)
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     startX = event.rawX
@@ -38,7 +37,6 @@ abstract class BaseSwipeLeftActivity<VM : ViewModel, VB : ViewDataBinding> :
 
                 MotionEvent.ACTION_UP -> {
                     val dx = lastX - startX
-//                    println("x: $dx")
                     if (dx > 160) {
                         onSwipeLeft(v)
                     } else {

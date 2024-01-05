@@ -20,8 +20,8 @@ class App : ViewModelStoreOwner, BaseApp() {
         val path = Environment.getExternalStorageDirectory().path + "/demo_log" + File.separator
         //  createOrExistsDir(new File(path+"log.txt"));
         //  createOrExistsDir(new File(path+"log.txt"));
-        LogUtils.getConfig().isLogSwitch = true
-        LogUtils.getConfig().isLog2FileSwitch = true
+        LogUtils.getConfig().isLogSwitch = false //日志总开关
+        LogUtils.getConfig().isLog2FileSwitch = false //文件总开关
         LogUtils.getConfig().dir = path
     }
 

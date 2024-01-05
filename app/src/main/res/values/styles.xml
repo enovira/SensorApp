@@ -49,4 +49,19 @@
         <attr name="batteryPower" format="integer"/>
     </declare-styleable>
 
+    <!-- Splash启动页Style -->
+    <style name="Theme.SplashScreen.sensorApp" parent="Theme.SplashScreen">
+        <!--启动画面背景颜色-->
+        <item name="windowSplashScreenBackground">#eeeeee</item>
+        <!-- 启动画面icon图标：这里可以是图片、帧动画等-->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_img</item>
+        <item name="windowSplashScreenIconBackgroundColor">@android:color/white</item>
+        <!-- icon动画在关闭之前显示的时长：最长时间为1000毫秒-->
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <!-- 启动画面底部的 Brand 图片-->
+        <!--        <item name="android:windowSplashScreenBrandingImage">@mipmap/icon_ejj</item>-->
+        <!-- Splash退出后的主题-->
+        <item name="postSplashScreenTheme">@style/Theme.SensorApp</item>
+    </style>
+
 </resources>
