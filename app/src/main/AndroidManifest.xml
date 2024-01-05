@@ -48,10 +48,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/step_icon"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/step_icon"
+        android:roundIcon="@mipmap/icon_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.SplashScreen.sensorApp"
         android:usesCleartextTraffic="true">

@@ -156,10 +156,11 @@ class WorkService : Service(), SensorEventListener, LocationListener {
                 NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW)
             notificationManager.createNotificationChannel(notificationChannel) // 创建完通知通道后需在NotificationManager中创建通道
         }
+        NotificationCompat.WearableExtender()
         // channelId需要与步骤2中的channelId一致
         val notification = NotificationCompat.Builder(this@WorkService, channelId)
-            .setSmallIcon(R.mipmap.step_icon) //设置通知的图标
-            .setContentTitle("SensorApp") //设置标题
+            .setSmallIcon(R.mipmap.icon_launcher) //设置通知的图标
+            .setContentTitle(getString(R.string.app_name)) //设置标题
             .setContentText("正在工作中，回到工作") //消息内容
 //            .setDefaults(Notification.DEFAULT_ALL) //设置默认的提示音
             .setOngoing(false) //让通知左右滑的时候不能取消通知

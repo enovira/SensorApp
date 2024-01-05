@@ -238,7 +238,7 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
         })
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                finish()
+                onSwipeLeft(mBinding.root)
             }
         })
     }
