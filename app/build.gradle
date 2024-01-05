@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.yxh.sensor"
-        minSdk 24
+        minSdk 25
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -21,6 +21,11 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "健康作业_" + new Date().format("yyyyMMddHHmm") + ".apk"
         }
     }
     compileOptions {
@@ -60,6 +65,6 @@ dependencies {
     // 引入 splashscreen 相关依赖
     implementation "androidx.core:core-splashscreen:1.0.0-alpha02"
 
-//    implementation "androidx.wear:wear-ongoing:1.0.0-beta01"
+    implementation "androidx.wear:wear-ongoing:1.0.0"
 
 }

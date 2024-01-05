@@ -156,7 +156,6 @@ class WorkService : Service(), SensorEventListener, LocationListener {
                 NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW)
             notificationManager.createNotificationChannel(notificationChannel) // 创建完通知通道后需在NotificationManager中创建通道
         }
-        NotificationCompat.WearableExtender()
         // channelId需要与步骤2中的channelId一致
         val notification = NotificationCompat.Builder(this@WorkService, channelId)
             .setSmallIcon(R.mipmap.icon_launcher) //设置通知的图标
