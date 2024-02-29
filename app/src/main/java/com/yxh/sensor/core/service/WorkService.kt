@@ -32,6 +32,7 @@ import com.yxh.sensor.App
 import com.yxh.sensor.R
 import com.yxh.sensor.core.global.ConstantStore
 import com.yxh.sensor.core.global.SPKey
+import com.yxh.sensor.core.manager.CountWorker
 import com.yxh.sensor.core.receiver.AlarmTaskReceiver
 import com.yxh.sensor.core.retrofit.bean.CustomPosition
 import com.yxh.sensor.core.utils.SPUtils
@@ -55,8 +56,8 @@ class WorkService : Service(), SensorEventListener, LocationListener {
 
     private var period: Int = 60
 
-    private var latitude = 0.0
-    private var longitude = 0.0
+    private var latitude: Double? = null
+    private var longitude: Double? = null
     private var mWakeLock: WakeLock? = null
 
     private val wakeupBroadcastReceiver = WakeupBroadcastReceiver()
@@ -75,6 +76,7 @@ class WorkService : Service(), SensorEventListener, LocationListener {
         val intentFilter = IntentFilter()
         intentFilter.addAction("sensorWakeupBroadcast")
         registerReceiver(wakeupBroadcastReceiver, intentFilter)
+//        CountWorker.enqueue(this)
 //        startTimer()
     }
 
@@ -237,10 +239,10 @@ class WorkService : Service(), SensorEventListener, LocationListener {
     inner class WakeupBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action?.equals("sensorWakeupBroadcast") == true) {
-                setAlarm()
-                wakeup(30 * 1000)
-//                setSensorListener(30 * 1000)
+                wakeup(60 * 1000)
                 reportProperty()
+                setAlarm()
+//                setSensorListener(30 * 1000)
             }
         }
     }
@@ -251,7 +253,10 @@ class WorkService : Service(), SensorEventListener, LocationListener {
     private fun reportProperty() {
         kotlin.runCatching {
             App.instance.eventViewModelStore.sensorEventViewModel.reportProperties(
-                CustomPosition(latitude, longitude))
+                if (latitude == null || longitude == null)
+                    null
+                else
+                    CustomPosition(latitude, longitude))
         }.exceptionOrNull()?.run {
             LogUtils.e(message)
             App.instance.eventViewModelStore.sensorEventViewModel.apiServerException.postValue(
@@ -279,7 +284,7 @@ class WorkService : Service(), SensorEventListener, LocationListener {
         LogUtils.d("setAlarm ${simpleDateFormat.format(System.currentTimeMillis())}")
         val calendar = Calendar.getInstance(Locale.CHINA)
         calendar.timeInMillis = System.currentTimeMillis()
-        calendar.add(Calendar.SECOND, period) //设置唤醒间隔
+        calendar.add(Calendar.MINUTE, 5) //设置唤醒间隔
         val intent = Intent(this, AlarmTaskReceiver::class.java)
         intent.action = "alarmBroadcast"
 //        intent.component = ComponentName(packageName, WorkService::class.java.name)

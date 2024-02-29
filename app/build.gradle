@@ -12,7 +12,7 @@ android {
         minSdk 25
         targetSdk 34
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -25,7 +25,7 @@ android {
     }
     android.applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "健康作业_" + new Date().format("yyyyMMddHHmm") + ".apk"
+            outputFileName = "健康作业_" + variant.versionName + "_" + new Date().format("yyyyMMddHHmm") + ".apk"
         }
     }
     compileOptions {
@@ -60,11 +60,25 @@ dependencies {
     // https://mvnrepository.com/artifact/com.alibaba/fastjson
     implementation  'com.alibaba:fastjson:1.2.6'
 
+    //工具类大全
     implementation 'com.blankj:utilcodex:1.31.0'
 
     // 引入 splashscreen 相关依赖
     implementation "androidx.core:core-splashscreen:1.0.0-alpha02"
 
+    //持续性活动
     implementation "androidx.wear:wear-ongoing:1.0.0"
+
+    def work_version = "2.3.1"
+    // (Java only)
+    implementation "androidx.work:work-runtime:$work_version"
+    // Kotlin + coroutines
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    // optional - RxJava2 support
+    implementation "androidx.work:work-rxjava2:$work_version"
+    // optional - GCMNetworkManager support
+    implementation "androidx.work:work-gcm:$work_version"
+    // optional - Test helpers
+    androidTestImplementation "androidx.work:work-testing:$work_version"
 
 }

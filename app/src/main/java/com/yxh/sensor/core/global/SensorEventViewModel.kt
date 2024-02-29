@@ -72,31 +72,35 @@ class SensorEventViewModel: ViewModel() {
         }
     }
 
-    fun reportProperties(customPosition: CustomPosition) {
+    fun reportProperties(customPosition: CustomPosition?) {
         if (imei == null) {
             throw InvalidParameterException("imei为空")
         }
         initApiServer()
-        imei?.let{
+        imei?.let{ it ->
             val reportPropertiesBean = ReportPropertiesBean(
                 it,
                 CustomProperties(
                     heartRate.value,
                     bloodOxygen.value,
                     stepCount.value,
-                    customPosition
-                )
+                ).apply {
+                    customPosition?.let { customPositionBean ->
+                        position = customPositionBean
+                    }
+                }
             )
             LogUtils.d(Gson().toJson(reportPropertiesBean))
             val call = apiServer?.reportProperties(reportPropertiesBean)
             call?.enqueue(object : Callback<JSONObject> {
                 override fun onResponse(call: Call<JSONObject>, response: Response<JSONObject>) {
-                    println("请求成功")
-                    LogUtils.d(response.body()?.toJSONString())
+                    LogUtils.d("请求成功")
+//                    LogUtils.d(response.body()?.toJSONString())
                 }
 
                 override fun onFailure(call: Call<JSONObject>, t: Throwable) {
-                    println("请求失败")
+                    LogUtils.d("请求失败")
+                    LogUtils.e(t.cause)
                     t.printStackTrace()
                 }
             })

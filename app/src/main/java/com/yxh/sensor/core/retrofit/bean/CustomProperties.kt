@@ -4,5 +4,5 @@ class CustomProperties(
     var heartRate: Int?,
     var bloodOxygen: Int?,
     var stepNumber: Int?,
-    var position: CustomPosition?,
+    var position: CustomPosition? = null,
 )
