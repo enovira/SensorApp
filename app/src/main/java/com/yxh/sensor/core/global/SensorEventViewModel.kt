@@ -61,8 +61,7 @@ class SensorEventViewModel: ViewModel() {
                     val request = it.request().newBuilder()
                         .addHeader("Content-Type", "application/json;charset=UTF-8").build()
                     it.proceed(request)
-                }
-                .build()
+                }.build()
             val retrofit: Retrofit = Retrofit.Builder()
                 .client(okHttpClient)
                 .baseUrl(sb.toString())
@@ -72,36 +71,30 @@ class SensorEventViewModel: ViewModel() {
         }
     }
 
-    fun reportProperties(customPosition: CustomPosition?) {
+    fun reportProperties(customPosition: CustomPosition) {
         if (imei == null) {
             throw InvalidParameterException("imei为空")
         }
         initApiServer()
-        imei?.let{ it ->
+        imei?.let{
             val reportPropertiesBean = ReportPropertiesBean(
                 it,
                 CustomProperties(
                     heartRate.value,
                     bloodOxygen.value,
                     stepCount.value,
-                ).apply {
-                    customPosition?.let { customPositionBean ->
-                        position = customPositionBean
-                    }
-                }
+                    customPosition
+                )
             )
             LogUtils.d(Gson().toJson(reportPropertiesBean))
             val call = apiServer?.reportProperties(reportPropertiesBean)
             call?.enqueue(object : Callback<JSONObject> {
                 override fun onResponse(call: Call<JSONObject>, response: Response<JSONObject>) {
                     LogUtils.d("请求成功")
-//                    LogUtils.d(response.body()?.toJSONString())
                 }
 
                 override fun onFailure(call: Call<JSONObject>, t: Throwable) {
-                    LogUtils.d("请求失败")
-                    LogUtils.e(t.cause)
-                    t.printStackTrace()
+                    LogUtils.d("请求失败", t.message)
                 }
             })
         }

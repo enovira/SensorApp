@@ -7,10 +7,6 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
 import android.graphics.drawable.AnimatedImageDrawable
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.location.LocationManager
 import android.media.MediaDrm
 import android.os.Build
@@ -21,6 +17,7 @@ import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewModelScope
 import com.yxh.sensor.App
@@ -29,6 +26,7 @@ import com.yxh.sensor.core.base.BaseSwipeLeftActivity
 import com.yxh.sensor.core.base.PreventFastClickListener
 import com.yxh.sensor.core.global.ConstantStore
 import com.yxh.sensor.core.global.SPKey
+import com.yxh.sensor.core.provider.CustomSensorProvider
 import com.yxh.sensor.core.receiver.BatteryBroadcastReceiver
 import com.yxh.sensor.core.receiver.TimeBroadcastReceiver
 import com.yxh.sensor.core.utils.SPUtils
@@ -38,6 +36,7 @@ import kotlinx.coroutines.launch
 import java.security.MessageDigest
 import java.util.Calendar
 import java.util.UUID
+import kotlin.text.get
 
 
 class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBinding>() {
@@ -45,7 +44,6 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
     private val batteryBroadcastReceiver by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { BatteryBroadcastReceiver() }
     private val timeBroadcastReceiver by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { TimeBroadcastReceiver() }
     private val calendar by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { Calendar.getInstance() }
-    private val mSensorManager by lazy { getSystemService(SensorManager::class.java) }
     private val timeStringBuilder = StringBuilder()
     private var gpsLevel = 0
 
@@ -60,14 +58,17 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
 
     override fun initView() {
         mBinding.vm = mViewModel
+        requestNotificationPermission()
         checkPermissions()
         initListener()
         initObserver()
         initImei()
         initSharedPreferenceValue()
         startGifAnimation()
-//            initGPSStatus()
-//        println(getUniqueId())
+        CustomSensorProvider.getInstance().registerHeartRateCallback {
+            mBinding.tvHeartRate.text = it.toString()
+        }.initialize(this)
+        CustomSensorProvider.getInstance().startPeriodicDetection()
     }
 
     override fun onResume() {
@@ -82,18 +83,6 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
     override fun onPause() {
         super.onPause()
         unregisterBroadcastReceiver()
-        unregisterHeartRateListener()
-    }
-
-    private fun registerHeartRateListener() {
-        mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)?.let {
-            mSensorManager.registerListener(
-                heartRateSensorListener, it, SensorManager.SENSOR_DELAY_NORMAL)
-        }
-    }
-
-    private fun unregisterHeartRateListener() {
-        mSensorManager.unregisterListener(heartRateSensorListener)
     }
 
     private val permissionRequester =
@@ -105,7 +94,7 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
             }
 
             if (it[Manifest.permission.BODY_SENSORS] == true) {
-                registerHeartRateListener() //开启运动传感器监听
+                println("成功获取BODY_SENSORS权限")
             } else {
                 println("获取BODY_SENSORS权限失败")
             }
@@ -126,45 +115,34 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
             }
         }
 
-    private val heartRateSensorListener = object : SensorEventListener {
-        override fun onSensorChanged(event: SensorEvent?) {
-            event?.values?.get(0)?.let {
-                mBinding.tvHeartRate.text = it.toInt().toString()
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1001
+                )
             }
         }
-
-        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-
-        }
-
     }
 
-
     private fun checkPermissions() {
+        val permissions = mutableListOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.BODY_SENSORS,
+            Manifest.permission.READ_PHONE_STATE,
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            permissionRequester.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.BODY_SENSORS,
-                    Manifest.permission.ACTIVITY_RECOGNITION,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_PHONE_STATE,
-                )
-            )
+            permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+            permissions.add(Manifest.permission.ACTIVITY_RECOGNITION)
         } else {
-            permissionRequester.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.BODY_SENSORS,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_PHONE_STATE,
-                )
-            )
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
+        permissionRequester.launch(permissions.toTypedArray())
     }
 
     private fun updateTime() {
@@ -233,6 +211,7 @@ class HomeActivity : BaseSwipeLeftActivity<HomeActivityViewModel, ActivityHomeBi
     private fun initListener() {
         mBinding.btnStart.setOnClickListener(object : PreventFastClickListener() {
             override fun onPresentFastClick(v: View?) {
+                mViewModel.vibrate()
                 startActivity(Intent(this@HomeActivity, WorkActivity::class.java))
             }
         })

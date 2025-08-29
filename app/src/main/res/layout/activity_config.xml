@@ -66,8 +66,10 @@
                     style="@style/ConfigActivityEdittextAppearance"
                     android:layout_width="match_parent"
                     android:drawableEnd="@mipmap/ic_arrow"
+                    android:imeOptions="actionDone"
                     android:drawablePadding="10dp"
                     android:hint="上送频率"
+                    android:inputType="number"
                     android:maxLength="6" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -96,8 +98,10 @@
                     android:layout_width="match_parent"
                     android:drawableEnd="@mipmap/ic_arrow"
                     android:drawablePadding="10dp"
-                    android:hint="IP地址"
-                    android:maxLength="20" />
+                    android:imeOptions="actionDone"
+                    android:digits="0123456789."
+                    android:inputType="phone"
+                    android:hint="IP地址" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -124,6 +128,8 @@
                     android:drawableEnd="@mipmap/ic_arrow"
                     android:drawablePadding="10dp"
                     android:hint="端口号"
+                    android:inputType="number"
+                    android:imeOptions="actionDone"
                     android:maxLength="5" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>

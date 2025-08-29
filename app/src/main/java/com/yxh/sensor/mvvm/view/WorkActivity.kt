@@ -2,6 +2,7 @@ package com.yxh.sensor.mvvm.view
 
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.view.KeyEvent
@@ -50,7 +51,11 @@ class WorkActivity : BaseSwipeLeftActivity<WorkActivityViewModel, ActivityWorkBi
         initObserver()
         updateTime()
 
-        startService(Intent(this, WorkService::class.java))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(Intent(this, WorkService::class.java))
+        } else {
+            startService(Intent(this, WorkService::class.java))
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {

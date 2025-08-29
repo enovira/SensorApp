@@ -52,6 +52,7 @@ class ConfigActivity : BaseSwipeLeftActivity<ConfigActivityViewModel, ActivityCo
         mBinding.etFrequency.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 v.clearFocus()
+                hideKeyboard()
                 true
             } else {
                 false
@@ -75,6 +76,7 @@ class ConfigActivity : BaseSwipeLeftActivity<ConfigActivityViewModel, ActivityCo
         mBinding.etIp.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 v.clearFocus()
+                hideKeyboard()
                 true
             } else {
                 false
@@ -98,6 +100,7 @@ class ConfigActivity : BaseSwipeLeftActivity<ConfigActivityViewModel, ActivityCo
         mBinding.etPort.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 v.clearFocus()
+                hideKeyboard()
                 true
             } else {
                 false
@@ -105,6 +108,15 @@ class ConfigActivity : BaseSwipeLeftActivity<ConfigActivityViewModel, ActivityCo
         }
         mBinding.llPort.setOnClickListener {
             mBinding.etPort.requestFocus()
+        }
+    }
+    private fun hideKeyboard() {
+        val currentFocus = currentFocus
+        if (currentFocus != null) {
+            inputMethodManager.hideSoftInputFromWindow(
+                currentFocus.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
         }
     }
 
